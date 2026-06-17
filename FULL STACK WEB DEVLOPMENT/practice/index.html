@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Car Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-area {
+            width: 500px;
+            height: 200px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            border: 3px solid #333;
+            border-radius: 10px;
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        #carimg {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            transition: all 0.1s linear;
+        }
+        
+        #carimg img {
+            width: 100px;
+            height: auto;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        #startBtn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+        }
+        
+        #startBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.6);
+        }
+        
+        #startBtn:active {
+            transform: translateY(-1px);
+        }
+        
+        #stopBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        #stopBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.6);
+        }
+        
+        #stopBtn:active {
+            transform: translateY(-1px);
+        }
+        
+        .info {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏎️ Car Racing Game</h1>
+        <div class="game-area">
+            <div id="carimg">
+                <img src="https://th.bing.com/th/id/OIP.aAZ4AknqXrSeArvWK3T72wHaE7?w=273&h=182&c=7&r=0&o=7&dpr=1.4&pid=1.7&rm=3" alt="car">
+            </div>
+        </div>
+        <div class="button-group">
+            <button onclick="startMoving()" id="startBtn">Start</button>
+            <button onclick="stopMoving()" id="stopBtn">Stop</button>
+        </div>
+        <div class="info">Click Start to make the car move across the screen!</div>
+    </div>
+    
+    <script>
+        let carPosition = 0;
+        let isMoving = false;
+        let animationId = null;
+        let speed = 5;
+        const gameArea = document.querySelector('.game-area');
+        const carImg = document.getElementById("carimg");
+        const maxDistance = gameArea.offsetWidth - 100;
+        
+        function startMoving(){
+            if (isMoving) return;
+            isMoving = true;
+            
+            function move(){
+                if (carPosition >= maxDistance){
+                    carPosition = 0;
+                    carImg.style.left = '0px';
+                    speed = Math.max(speed - 1, 1);
+                    stopMoving();
+                    setTimeout(startMoving, 1000);
+                    return;
+                }
+                carPosition += speed;
+                carImg.style.left = carPosition + 'px';
+                animationId = requestAnimationFrame(move);
+            }
+            move();
+        }
+        
+        function stopMoving(){
+            isMoving = false;
+            if (animationId){
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        // Reset car position
+        document.addEventListener('DOMContentLoaded', function(){
+            carImg.style.left = '0px';
+        });
+    </script>
+</body>
+</html>
