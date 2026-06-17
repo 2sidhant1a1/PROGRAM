@@ -1,0 +1,1 @@
+print("x\ty\n\tz\ti\n\t\tj\tk")
